@@ -12,7 +12,7 @@
 <body>
 
 <script>
-    window.document.addEventListener("facePosition", function(e) {
+    window.addEventListener("facePosition", function(e) {
         console.log(e.detail);
     })
 </script>    
@@ -29,6 +29,8 @@
     const facePos = [
         'up', 'down', 'left', 'right', 'center'
     ];
+
+    const scoreTreshold = 0.9;
 
     (async function () {
 
@@ -83,17 +85,20 @@
         // console.log("predictions", predictions, predictions.indexOf(Math.max.apply(this,predictions)))
         
         // Get the array key with the highest value in predictions array
-        const posInPredictionArr = predictions.indexOf(Math.max.apply(this,predictions))
-        
-        // Custom event: face position
-        //console.log(facePos[posInPredictionArr])
+        let maxValue = Math.max.apply(this,predictions);
 
-        var fpEvent = new CustomEvent("facePosition", {
-            detail: {
-                position: facePos[posInPredictionArr]
-            }
-        });
-        window.dispatchEvent(fpEvent);
+        //console.log("xxx", maxValue, scoreTreshold)
+        if (maxValue >= scoreTreshold) {
+            let posInPredictionArr = predictions.indexOf(maxValue);
+            
+            // Custom event: face position
+            var fpEvent = new CustomEvent("facePosition", {
+                detail: {
+                    position: facePos[posInPredictionArr]
+                }
+            });
+            window.dispatchEvent(fpEvent);
+        }
 
         x++
         detect()
