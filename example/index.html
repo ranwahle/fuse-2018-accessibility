@@ -16,7 +16,7 @@
         console.log(e.detail);
     })
 </script>    
-
+<script type="module" src="../movement-event-handler.js"></script>
 <script type="module">
 
     import webcamUtils from '../lib/webcam.js';
@@ -93,7 +93,7 @@
                 position: facePos[posInPredictionArr]
             }
         });
-        window.document.dispatchEvent(fpEvent);
+        window.dispatchEvent(fpEvent);
 
         x++
         detect()

@@ -7,7 +7,7 @@
         down: 'down'
     }
     window.addEventListener('facePosition', (evt) => {
-        switch (evt.detail) {
+        switch (evt.detail.position) {
             case positions.down: {
                 window.scroll(window.scrollX, window.scrollY + movement)
                 break;
@@ -26,7 +26,6 @@
             }
 
         }
-        window.scroll(window.scrollX, window.scrollY - movement)
     })
 
 
