@@ -9,12 +9,23 @@
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.11.2"></script>
     <script type="module" src="../lib/webcam.js"></script>
     <script type="module" src="../lib/tf.js"></script>
+    <style>
+    #webcamCanvas, video{
+        position: absolute;
+        top: -1000px;
+    }
+    #canvascontainer canvas{
+        border: 1px solid red;
+        width: 500px;
+        height: 295px
+    }
+    </style>
 </head>
 
 <body>
 
-    <div id="myfilter" style="position:absolute;background-color:#000000;opacity:0.3;width:322px;height:182px;display:none"></div>
-    <div id="myrestartbutton" style="position:absolute;padding-top:75px;padding-left:120px;display:none;">
+    <div id="myfilter" style="position:absolute;background-color:#000000;opacity:0.3;width:500px;height:295px;display:none"></div>
+    <div id="myrestartbutton" style="position:absolute;display:none;top:20%;left:32%">
         <button onclick="restartGame()">Restart</button>
     </div>
     <div id="canvascontainer"></div>
@@ -37,16 +48,7 @@
 
         (async function () {
 
-            const btn0 = document.getElementById('btn0')
-            const btn1 = document.getElementById('btn1')
-            const btn2 = document.getElementById('btn2')
-            const btn3 = document.getElementById('btn3')
-            const btn4 = document.getElementById('btn4')
-
-            const btnTrain = document.getElementById('train')
             const btnStart = document.getElementById('start')
-
-            const btnSave = document.getElementById('save')
             const btnLoad = document.getElementById('load')
 
             video = document.getElementById('webcam')
@@ -56,36 +58,24 @@
             await model.initialize()
 
             document.body.appendChild(webcamUtils.canvas)
-            document.getElementById('status').textContent = 'ready!'
+            // document.getElementById('status').textContent = 'ready!'
 
-            btn0.onclick = btn1.onclick = btn2.onclick = btn3.onclick = btn4.onclick = function buttonHandler() {
-                webcamUtils.capture()
-                console.log('Capture', facePos[this.id.slice(3)])
-                const label = parseInt(this.id.slice(3))
-                const imageData = model.captureImageFromCanvas(canvas)
-                model.sample(imageData, label)
-            }
+            // const done = (loss) => {
+            //     console.log(loss)
+            // }
 
-            const done = (loss) => {
-                console.log(loss)
-            }
+            // btnStart.onclick = function () {
+            //     detect()
+            //     this.remove()
+            // }
 
-            btnTrain.onclick = function () {
-                model.train(done)
-            }
-
-            btnStart.onclick = function () {
+            // btnLoad.onclick = function () {
+            //     loadFromFile();
+            // }
+            loadFromFile(function () {
                 detect()
-                this.remove()
-            }
-
-            btnSave.onclick = function () {
-                saveToFile();
-            }
-
-            btnLoad.onclick = function () {
-                loadFromFile();
-            }
+                startGame()
+            })
 
         })()
 
@@ -119,17 +109,10 @@
             detect()
         }
 
-        async function saveToFile() {
-            try {
-                await model.saveToFile()
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        async function loadFromFile() {
+        async function loadFromFile(callback) {
             try {
                 await model.loadFromFile();
+                callback()
             } catch (err) {
                 console.log(err);
             }
@@ -287,23 +270,15 @@
             myGamePiece.speedX = 0;
             myGamePiece.speedY = 0;
         }
-        startGame();
+        
 
     </script>
 
     <video id="webcam" height="360" width="360" autoplay></video>
 
-    <div id="status"></div>
-    <button id="btn0">Sample as Face Up</button>
-    <button id="btn1">Sample as Face Down</button>
-    <button id="btn2">Sample as Face Left</button>
-    <button id="btn3">Sample as Face Right</button>
-    <button id="btn4">Sample as Face Center</button>
-    <hr>
-    <button id="train">Train Model</button>
-    <button id="start">Start detection</button>
-    <button id="save">Save Model</button>
-    <button id="load">Load Model</button>
+    <!-- <div id="status"></div> -->
+    <!-- <button id="start">Start detection</button>
+    <button id="load">Load Model</button> -->
 </body>
 
 </html>
