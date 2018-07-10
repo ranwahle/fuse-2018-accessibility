@@ -5,101 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Example</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.11.2"></script>
+    <script src="../vendor/tsfjs@0.11.2.js"></script>
     <script type="module" src="../lib/webcam.js"></script>
     <script type="module" src="../lib/tf.js"></script>
 </head>
-<body>
+<body style="min-height: 200px; min-width: 3000px">
 
-<script>
-    window.document.addEventListener("facePosition", function(e) {
-        console.log(e.detail);
-    })
-</script>    
+
 <script type="module" src="../movement-event-handler.js"></script>
-<script type="module">
-
-    import webcamUtils from '../lib/webcam.js';
-    import LearningModel from '../lib/tf.js';
-
-    let model
-    let canvas
-    let video
-
-    const facePos = [
-        'up', 'down', 'left', 'right', 'center'
-    ];
-
-    (async function () {
-
-        const btn0 = document.getElementById('btn0')
-        const btn1 = document.getElementById('btn1')
-        const btn2 = document.getElementById('btn2')
-        const btn3 = document.getElementById('btn3')
-        const btn4 = document.getElementById('btn4')
-
-        const btnTrain = document.getElementById('train')
-        const btnStart = document.getElementById('start')
-
-        video = document.getElementById('webcam')
-        await webcamUtils.init(document.getElementById('webcam'))
-        canvas = webcamUtils.canvas
-        model = new LearningModel(5)
-        await model.initialize()
-
-        document.body.appendChild(webcamUtils.canvas)
-        document.getElementById('status').textContent = 'ready!'
-
-        btn0.onclick = btn1.onclick = btn2.onclick = btn3.onclick = btn4.onclick = function buttonHandler () {
-            webcamUtils.capture()
-            console.log('Capture', facePos[this.id.slice(3)])
-            const label = parseInt(this.id.slice(3))
-            const imageData = model.captureImageFromCanvas(canvas)
-            model.sample(imageData, label)
-        }
-
-        const done = (loss) => {
-            console.log(loss)
-        }
-
-        btnTrain.onclick = function () {
-            model.train(done)
-        }
-
-        btnStart.onclick = function () {
-            detect()
-            this.remove()
-        }
-
-    })()
-
-    let x = 0
-
-    async function detect () {
-        webcamUtils.capture()
-        const imageData = model.captureImageFromCanvas(canvas)
-        const predictions = await model.test(imageData)
-        
-        // console.log("predictions", predictions, predictions.indexOf(Math.max.apply(this,predictions)))
-        
-        // Get the array key with the highest value in predictions array
-        const posInPredictionArr = predictions.indexOf(Math.max.apply(this,predictions))
-        
-        // Custom event: face position
-        //console.log(facePos[posInPredictionArr])
-
-        var fpEvent = new CustomEvent("facePosition", {
-            detail: {
-                position: facePos[posInPredictionArr]
-            }
-        });
-        window.dispatchEvent(fpEvent);
-
-        x++
-        detect()
-    }
-
-</script>
+<script type="module" src="index.js"></script>
 
 
 <video id="webcam" height="360" width="360" autoplay></video>

@@ -1,0 +1,11 @@
+{
+  "manifest_version": 2,
+  "name": "Tikal Accessibility extension",
+  "description" : "This extension recognizes face gestures and scrolls the document accordingly",
+  "version": "1.0",
+  "browser_action": {
+    "default_icon": "tikal.jpeg",
+    "default_popup": "example/index.html"
+  },
+  "permissions": ["activeTab"]
+}
