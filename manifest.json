@@ -7,5 +7,6 @@
     "default_icon": "tikal.jpeg",
     "default_popup": "example/index.html"
   },
+  "background": ["example/index.js"],
   "permissions": ["activeTab"]
 }
