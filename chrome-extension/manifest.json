@@ -17,5 +17,9 @@
     "https://*/*",
     "http://*/*",
     "tabs"
+  ],
+  "web_accessible_resources": [
+    "data/my-model-1.json",
+    "data/my-model-1.weights.bin"
   ]
 }
