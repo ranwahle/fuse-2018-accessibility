@@ -11,6 +11,12 @@
 </head>
 <body>
 
+<script>
+    window.document.addEventListener("facePosition", function(e) {
+        console.log(e.detail);
+    })
+</script>    
+<script type="module" src="../movement-event-handler.js"></script>
 <script type="module">
 
     import webcamUtils from '../lib/webcam.js';
@@ -20,24 +26,33 @@
     let canvas
     let video
 
+    const facePos = [
+        'up', 'down', 'left', 'right', 'center'
+    ];
+
     (async function () {
 
         const btn0 = document.getElementById('btn0')
         const btn1 = document.getElementById('btn1')
+        const btn2 = document.getElementById('btn2')
+        const btn3 = document.getElementById('btn3')
+        const btn4 = document.getElementById('btn4')
+
         const btnTrain = document.getElementById('train')
         const btnStart = document.getElementById('start')
 
         video = document.getElementById('webcam')
         await webcamUtils.init(document.getElementById('webcam'))
         canvas = webcamUtils.canvas
-        model = new LearningModel(2)
+        model = new LearningModel(5)
         await model.initialize()
 
         document.body.appendChild(webcamUtils.canvas)
         document.getElementById('status').textContent = 'ready!'
 
-        btn0.onclick = btn1.onclick = function buttonHandler () {
+        btn0.onclick = btn1.onclick = btn2.onclick = btn3.onclick = btn4.onclick = function buttonHandler () {
             webcamUtils.capture()
+            console.log('Capture', facePos[this.id.slice(3)])
             const label = parseInt(this.id.slice(3))
             const imageData = model.captureImageFromCanvas(canvas)
             model.sample(imageData, label)
@@ -64,7 +79,22 @@
         webcamUtils.capture()
         const imageData = model.captureImageFromCanvas(canvas)
         const predictions = await model.test(imageData)
-        console.log(predictions)
+        
+        // console.log("predictions", predictions, predictions.indexOf(Math.max.apply(this,predictions)))
+        
+        // Get the array key with the highest value in predictions array
+        const posInPredictionArr = predictions.indexOf(Math.max.apply(this,predictions))
+        
+        // Custom event: face position
+        //console.log(facePos[posInPredictionArr])
+
+        var fpEvent = new CustomEvent("facePosition", {
+            detail: {
+                position: facePos[posInPredictionArr]
+            }
+        });
+        window.dispatchEvent(fpEvent);
+
         x++
         detect()
     }
@@ -75,8 +105,12 @@
 <video id="webcam" height="360" width="360" autoplay></video>
 
 <div id="status"></div>
-<button id="btn0">Sample as item #0</button>
-<button id="btn1">Sample as item #1</button>
+<button id="btn0">Sample as Face Up</button>
+<button id="btn1">Sample as Face Down</button>
+<button id="btn2">Sample as Face Left</button>
+<button id="btn3">Sample as Face Right</button>
+<button id="btn4">Sample as Face Center</button>
+<hr>
 <button id="train">Train Model</button>
 <button id="start">Start detection</button>
 

@@ -1,8 +1,32 @@
-(function() {
+(function () {
     const movement = 20
-    window.addEventListener('moveUp', () => window.scroll(window.scrollX, window.scrollY - movement))
-    window.addEventListener('moveDown', () => window.scroll(window.scrollX, window.scrollY + movement))
-    window.addEventListener('moveLeft', () => window.scroll(window.scrollX - movement, window.scrollY))
-    window.addEventListener('moveRight', () => window.scroll(window.scrollX + movement, window.scrollY))
+    const positions = {
+        left: 'left',
+        right: 'right',
+        up: 'up',
+        down: 'down'
+    }
+    window.addEventListener('facePosition', (evt) => {
+        switch (evt.detail.position) {
+            case positions.down: {
+                window.scroll(window.scrollX, window.scrollY + movement)
+                break;
+            }
+            case positions.up: {
+                window.scroll(window.scrollX, window.scrollY - movement)
+                break;
+            }
+            case positions.left: {
+                window.scroll(window.scrollX - movement, window.scrollY)
+                break;
+            }
+            case positions.right: {
+                window.scroll(window.scrollX + movement, window.scrollY)
+                break;
+            }
+
+        }
+    })
+
 
 }())
