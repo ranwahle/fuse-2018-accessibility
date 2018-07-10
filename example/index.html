@@ -43,6 +43,9 @@
         const btnTrain = document.getElementById('train')
         const btnStart = document.getElementById('start')
 
+      const btnSave = document.getElementById('save')
+      const btnLoad = document.getElementById('load')
+
         video = document.getElementById('webcam')
         await webcamUtils.init(document.getElementById('webcam'))
         canvas = webcamUtils.canvas
@@ -72,6 +75,14 @@
             detect()
             this.remove()
         }
+
+      btnSave.onclick = function() {
+        saveToFile();
+      }
+
+      btnLoad.onclick = function() {
+        loadFromFile();
+      }
 
     })()
 
@@ -104,6 +115,22 @@
         detect()
     }
 
+    async function saveToFile() {
+      try {
+        await model.saveToFile()
+      } catch(err) {
+        console.log(err);
+      }
+    }
+
+    async function loadFromFile() {
+      try {
+        await model.loadFromFile();
+      } catch(err) {
+        console.log(err);
+      }
+    }
+
 </script>
 
 
@@ -118,6 +145,7 @@
 <hr>
 <button id="train">Train Model</button>
 <button id="start">Start detection</button>
-
+<button id="save">Save Model</button>
+<button id="load">Load Model</button>
 </body>
 </html>
