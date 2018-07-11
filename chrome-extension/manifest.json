@@ -6,7 +6,8 @@
   "homepage_url": "http://danharper.me",
   "background": {
     "scripts": [
-      "background.js"
+      "background.js",
+      "lib/tf.js"
     ],
     "persistent": true
   },

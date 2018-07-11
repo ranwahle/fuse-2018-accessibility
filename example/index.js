@@ -77,4 +77,20 @@ async function detect () {
 
     x++
     detect()
+
+    async function saveToFile() {
+        try {
+            await model.saveToFile()
+        } catch(err) {
+            console.log(err);
+        }
+    }
+
+    async function loadFromFile() {
+        try {
+            await model.loadFromFile();
+        } catch(err) {
+            console.log(err);
+        }
+    }
 }
